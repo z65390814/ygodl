@@ -167,6 +167,10 @@ bool ReplayMode::StartDuel() {
 	pduel = create_duel(rnd());
 	preload_script(pduel, "./script/special.lua", 0);
 	preload_script(pduel, "./script/init.lua", 0);
+	mainGame->dInfo.skilladdpzone[0] = FALSE;
+	mainGame->dInfo.skilladdpzone[1] = FALSE;
+	//初始化双方玩家默认没有通过技能添加额外灵摆区域
+
 	int start_lp = cur_replay.ReadInt32();
 	int start_hand = cur_replay.ReadInt32();
 	int draw_count = cur_replay.ReadInt32();
@@ -864,6 +868,11 @@ bool ReplayMode::ReplayAnalyze(char* msg, unsigned int len) {
 		case MSG_SHOW_HINT: {
 			int len = BufferIO::ReadInt16(pbuf);
 			pbuf += len + 1;
+			break;
+		}
+		case MSG_ADDEXPZONE: {
+			pbuf += 5;
+			DuelClient::ClientAnalyze(offset, pbuf - offset);
 			break;
 		}
 		}

@@ -405,6 +405,10 @@ void TagDuel::TPResult(DuelPlayer* dp, unsigned char tp) {
 	pduel = create_duel(duel_seed);
 	preload_script(pduel, "./script/special.lua", 0);
 	preload_script(pduel, "./script/init.lua", 0);
+	mainGame->dInfo.skilladdpzone[0] = FALSE;
+	mainGame->dInfo.skilladdpzone[1] = FALSE;
+
+
 	set_player_info(pduel, 0, host_info.start_lp, host_info.start_hand, host_info.draw_count);
 	set_player_info(pduel, 1, host_info.start_lp, host_info.start_hand, host_info.draw_count);
 	int opt = (int)host_info.duel_rule << 16;
@@ -1514,6 +1518,14 @@ int TagDuel::Analyze(char* msgbuffer, unsigned int len) {
 		}
 		case MSG_MATCH_KILL: {
 			pbuf += 4;
+			break;
+		}
+		case MSG_ADDEXPZONE: {
+			pbuf += 5;
+			NetServer::SendBufferToPlayer(players[0], STOC_GAME_MSG, offset, pbuf - offset);
+			NetServer::ReSendToPlayer(players[1]);
+			for (auto oit = observers.begin(); oit != observers.end(); ++oit)
+				NetServer::ReSendToPlayer(*oit);
 			break;
 		}
 		}

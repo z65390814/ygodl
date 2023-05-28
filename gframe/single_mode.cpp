@@ -44,6 +44,11 @@ int SingleMode::SinglePlayThread() {
 	preload_script(pduel, "./script/init.lua", 0);
 	set_player_info(pduel, 0, start_lp, start_hand, draw_count);
 	set_player_info(pduel, 1, start_lp, start_hand, draw_count);
+
+	mainGame->dInfo.skilladdpzone[0] = FALSE;
+	mainGame->dInfo.skilladdpzone[1] = FALSE;
+	//初始化双方玩家默认没有通过技能添加额外灵摆区域
+
 	mainGame->dInfo.lp[0] = start_lp;
 	mainGame->dInfo.lp[1] = start_lp;
 	mainGame->dInfo.start_lp = start_lp;
@@ -773,6 +778,12 @@ bool SingleMode::SinglePlayAnalyze(char* msg, unsigned int len) {
 			mainGame->gMutex.unlock();
 			mainGame->actionSignal.Reset();
 			mainGame->actionSignal.Wait();
+			break;
+		}
+		//前端界面接收到添加额外灵摆区的消息
+		case MSG_ADDEXPZONE: {
+			pbuf += 5;
+			DuelClient::ClientAnalyze(offset, pbuf - offset);
 			break;
 		}
 		}

@@ -685,7 +685,7 @@ bool ClientField::OnEvent(const irr::SEvent& event) {
 								select_options_index.push_back(i);
 							}
 						}
-						if (select_options.size() == 1) {
+						if (select_options.size() == 1 && command_card->location != LOCATION_EXTRA) {
 							int index = select_options_index[0];
 							if (mainGame->dInfo.curMsg == MSG_SELECT_IDLECMD) {
 								DuelClient::SetResponseI((index << 16) + 5);
@@ -697,6 +697,11 @@ bool ClientField::OnEvent(const irr::SEvent& event) {
 							mainGame->HideElement(mainGame->wCardSelect, true);
 						} else {
 							mainGame->wCardSelect->setVisible(false);
+							if (command_card->location == LOCATION_EXTRA)
+							{
+								mainGame->btnShuffle->setVisible(false);
+								ShowCancelOrFinishButton(1);
+							}
 							ShowSelectOption();
 						}
 						break;

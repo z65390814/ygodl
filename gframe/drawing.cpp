@@ -420,20 +420,80 @@ void Game::DrawCard(ClientCard* pcard) {
 		driver->setTransform(irr::video::ETS_WORLD, atk);
 		driver->drawVertexPrimitiveList(matManager.vSymbol, 4, matManager.iRectangle, 2);
 	}
-	if(mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && (pcard->sequence == 0 || pcard->sequence == 6))) {
-		int scale = pcard->lscale;
-		if(scale >= 0 && scale <= 13 && imageManager.tLScale[scale]) {
-			matManager.mTexture.setTexture(0, imageManager.tLScale[scale]);
-			driver->setMaterial(matManager.mTexture);
-			driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+
+	int seql0, seql1, seqr0, seqr1;
+	if (dInfo.duel_rule >= 4)
+	{
+		if (dInfo.skilladdpzone[0] == FALSE)
+		{
+			seql0 = 1;
+			seqr0 = 3;
+		}
+		else if (dInfo.skilladdpzone[0] == TRUE)
+		{
+			seql0 = 0;
+			seqr0 = 4;
+		}
+
+		if (dInfo.skilladdpzone[1] == FALSE)
+		{
+			seql1 = 1;
+			seqr1 = 3;
+		}
+		else if (dInfo.skilladdpzone[1] == TRUE)
+		{
+			seql1 = 0;
+			seqr1 = 4;
 		}
 	}
-	if(mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && (pcard->sequence == 4 || pcard->sequence == 7))) {
-		int scale2 = pcard->rscale;
-		if(scale2 >= 0 && scale2 <= 13 && imageManager.tRScale[scale2]) {
-			matManager.mTexture.setTexture(0, imageManager.tRScale[scale2]);
-			driver->setMaterial(matManager.mTexture);
-			driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+	else
+	{
+		seql0 = 6;
+		seqr0 = 7;
+		seql1 = 6;
+		seqr1 = 7;
+	}
+
+	if (pcard->controler == 0)
+	{
+		if (mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && pcard->sequence == seql0)) {
+			int scale = pcard->lscale;
+			if (scale >= 0 && scale <= 13 && imageManager.tLScale[scale]) {
+				matManager.mTexture.setTexture(0, imageManager.tLScale[scale]);
+				driver->setMaterial(matManager.mTexture);
+				driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+			}
+		}
+		if (mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && pcard->sequence == seqr0)) {
+
+
+			int scale2 = pcard->rscale;
+			if (scale2 >= 0 && scale2 <= 13 && imageManager.tRScale[scale2]) {
+				matManager.mTexture.setTexture(0, imageManager.tRScale[scale2]);
+				driver->setMaterial(matManager.mTexture);
+				driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+			}
+		}
+	}
+	else if (pcard->controler == 1)
+	{
+		if (mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && pcard->sequence == seql1 )) {
+			int scale = pcard->lscale;
+			if (scale >= 0 && scale <= 13 && imageManager.tLScale[scale]) {
+				matManager.mTexture.setTexture(0, imageManager.tLScale[scale]);
+				driver->setMaterial(matManager.mTexture);
+				driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+			}
+		}
+		if (mainGame->chkEnablePScale->isChecked() && (pcard->type & TYPE_PENDULUM) && ((pcard->location & LOCATION_SZONE) && pcard->sequence == seqr1)) {
+
+
+			int scale2 = pcard->rscale;
+			if (scale2 >= 0 && scale2 <= 13 && imageManager.tRScale[scale2]) {
+				matManager.mTexture.setTexture(0, imageManager.tRScale[scale2]);
+				driver->setMaterial(matManager.mTexture);
+				driver->drawVertexPrimitiveList(matManager.vPScale, 4, matManager.iRectangle, 2);
+			}
 		}
 	}
 }
@@ -698,19 +758,42 @@ void Game::DrawMisc() {
 			DrawShadowText(adFont, pcard->rscstring, Resize(464, 246, 496, 266), Resize(1, 1, 1, 1), 0xffffffff, 0xff000000, true, false, 0);
 		}
 	} else {
-		pcard = dField.szone[0][0];
+		int seql0,seql1,seqr0, seqr1;
+		if (dInfo.skilladdpzone[0] == FALSE)
+		{
+			seql0 = 1;
+			seqr0 = 3;
+		}
+		else if (dInfo.skilladdpzone[0] == TRUE)
+		{
+			seql0 = 0;
+			seqr0 = 4;
+		}
+
+		if (dInfo.skilladdpzone[1] == FALSE)
+		{
+			seql1 = 1;
+			seqr1 = 3;
+		}
+		else if (dInfo.skilladdpzone[1] == TRUE)
+		{
+			seql1 = 0;
+			seqr1 = 4;
+		}
+
+		pcard = dField.szone[0][seql0];
 		if(pcard && (pcard->type & TYPE_PENDULUM) && !pcard->equipTarget) {
 			DrawShadowText(adFont, pcard->lscstring, Resize(455, 431, 467, 451), Resize(1, 1, 1, 1), 0xffffffff, 0xff000000, true, false, 0);
 		}
-		pcard = dField.szone[0][4];
+		pcard = dField.szone[0][seqr0];
 		if(pcard && (pcard->type & TYPE_PENDULUM) && !pcard->equipTarget) {
 			DrawShadowText(adFont, pcard->rscstring, Resize(851, 431, 883, 451), Resize(1, 1, 1, 1), 0xffffffff, 0xff000000, true, false, 0);
 		}
-		pcard = dField.szone[1][0];
+		pcard = dField.szone[1][seql1];
 		if(pcard && (pcard->type & TYPE_PENDULUM) && !pcard->equipTarget) {
 			DrawShadowText(adFont, pcard->lscstring, Resize(807, 223, 839, 243), Resize(1, 1, 1, 1), 0xffffffff, 0xff000000, true, false, 0);
 		}
-		pcard = dField.szone[1][4];
+		pcard = dField.szone[1][seql1];
 		if(pcard && (pcard->type & TYPE_PENDULUM) && !pcard->equipTarget) {
 			DrawShadowText(adFont, pcard->rscstring, Resize(499, 223, 531, 243), Resize(1, 1, 1, 1), 0xffffffff, 0xff000000, true, false, 0);
 		}

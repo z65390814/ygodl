@@ -1514,7 +1514,21 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 			else if (pcard->location == LOCATION_EXTRA)
 				mainGame->dField.extra_act = true;
 			else {
-				int seq = mainGame->dInfo.duel_rule >= 4 ? 0 : 6;
+				int seq;
+				if (mainGame->dInfo.skilladdpzone[pcard->controler] == FALSE && mainGame->dInfo.duel_rule >= 4)
+				{
+					seq = 1;
+				}
+				else if (mainGame->dInfo.skilladdpzone[pcard->controler] == TRUE && mainGame->dInfo.duel_rule >= 4)
+				{
+					seq = 0;
+				}
+				else
+				{
+					seq = 6;
+				}
+
+
 				if (pcard->location == LOCATION_SZONE && pcard->sequence == seq && (pcard->type & TYPE_PENDULUM) && !pcard->equipTarget)
 					mainGame->dField.pzone_act[pcard->controler] = true;
 			}
@@ -3452,6 +3466,15 @@ int DuelClient::ClientAnalyze(char * msg, unsigned int len) {
 		mainGame->dInfo.lp[player] = val;
 		mainGame->gMutex.lock();
 		myswprintf(mainGame->dInfo.strLP[player], L"%d", mainGame->dInfo.lp[player]);
+		mainGame->gMutex.unlock();
+		return true;
+	}
+			 //前端界面接收到添加额外灵摆区的消息
+	case MSG_ADDEXPZONE: {
+		mainGame->gMutex.lock();
+		int player = mainGame->LocalPlayer(BufferIO::ReadInt8(pbuf));
+		bool flag = BufferIO::ReadInt8(pbuf) != 0;
+		mainGame->dInfo.skilladdpzone[player] = flag;
 		mainGame->gMutex.unlock();
 		return true;
 	}

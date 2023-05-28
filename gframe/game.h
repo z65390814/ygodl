@@ -107,6 +107,7 @@ struct DuelInfo {
 	video::SColor total_attack_color[2];
 	bool isReplaySwapped;
 	std::vector<unsigned int> announce_cache;
+	bool skilladdpzone[2];
 };
 
 struct BotInfo {

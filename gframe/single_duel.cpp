@@ -436,6 +436,10 @@ void SingleDuel::TPResult(DuelPlayer* dp, unsigned char tp) {
 	pduel = create_duel(duel_seed);
 	preload_script(pduel, "./script/special.lua", 0);
 	preload_script(pduel, "./script/init.lua", 0);
+	mainGame->dInfo.skilladdpzone[0] = FALSE;
+	mainGame->dInfo.skilladdpzone[1] = FALSE;
+	//初始化双方玩家默认没有通过技能添加额外灵摆区域
+
 	set_player_info(pduel, 0, host_info.start_lp, host_info.start_hand, host_info.draw_count);
 	set_player_info(pduel, 1, host_info.start_lp, host_info.start_hand, host_info.draw_count);
 	int opt = (int)host_info.duel_rule << 16;
@@ -1419,6 +1423,22 @@ int SingleDuel::Analyze(char* msgbuffer, unsigned int len) {
 			}
 			break;
 		}
+		//前端界面接收到添加额外灵摆区的消息
+		case MSG_ADDEXPZONE: {
+			pbuf += 5;
+			NetServer::SendBufferToPlayer(players[0], STOC_GAME_MSG, offset, pbuf - offset);
+			NetServer::ReSendToPlayer(players[1]);
+			for (auto oit = observers.begin(); oit != observers.end(); ++oit)
+				NetServer::ReSendToPlayer(*oit);
+			//pbuf += 5;
+			//player =BufferIO::ReadInt8(pbuf);
+			//bool flag = BufferIO::ReadInt8(pbuf) != 0;
+			//mainGame->gMutex.lock();
+			//mainGame->dInfo.skilladdpzone[0] = TRUE;
+			//mainGame->gMutex.unlock();
+			break;
+		}
+
 		}
 	}
 	return 0;
